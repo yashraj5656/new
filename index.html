@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Personal Finance Calculator</title>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1420011915320387"
+     crossorigin="anonymous"></script>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f2f2f2;
+        display: flex;
+        justify-content: center;
+        align-items: start;
+        padding: 40px;
+      }
+      
+      .container {
+        background: #fff;
+        padding: 30px;
+        width: 100%;
+        max-width: 600px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      }
+      
+      h1, h2 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      
+      input {
+        display: block;
+        width: 100%;
+        margin: 10px 0;
+        padding: 10px;
+        font-size: 16px;
+      }
+      
+      button {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        background: #007bff;
+        color: white;
+        border: none;
+        margin-top: 10px;
+        cursor: pointer;
+      }
+      
+      button:hover {
+        background: #0056b3;
+      }
+      
+      .tabs button {
+        width: 32%;
+        margin: 5px 1%;
+        background: #e0e0e0;
+        border: none;
+        font-weight: bold;
+      }
+      
+      #loanResult, #savingsResult, #simpleResult {
+        margin-top: 15px;
+        font-weight: bold;
+      }      
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>💰 Personal Finance Calculator</h1>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button onclick="showTab('loan')">Loan</button>
+      <button onclick="showTab('savings')">Savings</button>
+      <button onclick="showTab('simple-interest')">Simple Interest</button>
+    </div>
+
+    <!-- Loan Calculator -->
+    <div id="loan" class="tab-content">
+      <h2>Loan Calculator</h2>
+      <input type="number" id="loanAmount" placeholder="Loan Amount ($)">
+      <input type="number" id="interestRate" placeholder="Annual Interest Rate (%)">
+      <input type="number" id="loanYears" placeholder="Loan Term (Years)">
+      <button onclick="calculateLoan()">Calculate</button>
+      <div id="loanResult"></div>
+    </div>
+
+    <!-- Savings Planner -->
+    <div id="savings" class="tab-content" style="display:none;">
+      <h2>Savings Planner</h2>
+      <input type="number" id="initialAmount" placeholder="Initial Amount ($)">
+      <input type="number" id="monthlyContribution" placeholder="Monthly Contribution ($)">
+      <input type="number" id="savingsRate" placeholder="Annual Interest Rate (%)">
+      <input type="number" id="savingsYears" placeholder="Years to Save">
+      <button onclick="calculateSavings()">Calculate</button>
+      <div id="savingsResult"></div>
+    </div>
+
+    <!-- Simple Interest -->
+    <div id="simple-interest" class="tab-content" style="display:none;">
+      <h2>Simple Interest</h2>
+      <input type="number" id="principal" placeholder="Principal ($)">
+      <input type="number" id="rate" placeholder="Rate (%)">
+      <input type="number" id="time" placeholder="Time (Years)">
+      <button onclick="calculateSimpleInterest()">Calculate</button>
+      <div id="simpleResult"></div>
+    </div>
+  </div>
+
+  <script>
+    function showTab(id) {
+        document.querySelectorAll('.tab-content').forEach(tab => {
+          tab.style.display = 'none';
+        });
+        document.getElementById(id).style.display = 'block';
+      }
+      
+      // Loan Calculator
+      function calculateLoan() {
+        const P = parseFloat(document.getElementById('loanAmount').value);
+        const annualRate = parseFloat(document.getElementById('interestRate').value);
+        const years = parseFloat(document.getElementById('loanYears').value);
+      
+        const r = (annualRate / 100) / 12;
+        const n = years * 12;
+      
+        const monthly = (P * r) / (1 - Math.pow(1 + r, -n));
+        const totalPayment = monthly * n;
+        const totalInterest = totalPayment - P;
+      
+        document.getElementById('loanResult').innerHTML = `
+          Monthly Payment: $${monthly.toFixed(2)}<br>
+          Total Payment: $${totalPayment.toFixed(2)}<br>
+          Total Interest: $${totalInterest.toFixed(2)}
+        `;
+      }
+      
+      // Savings Planner
+      function calculateSavings() {
+        const initial = parseFloat(document.getElementById('initialAmount').value);
+        const monthly = parseFloat(document.getElementById('monthlyContribution').value);
+        const rate = parseFloat(document.getElementById('savingsRate').value) / 100 / 12;
+        const months = parseInt(document.getElementById('savingsYears').value) * 12;
+      
+        let futureValue = initial * Math.pow(1 + rate, months);
+        for (let i = 1; i <= months; i++) {
+          futureValue += monthly * Math.pow(1 + rate, months - i);
+        }
+      
+        document.getElementById('savingsResult').innerHTML = `
+          Future Value: $${futureValue.toFixed(2)}
+        `;
+      }
+      
+      // Simple Interest
+      function calculateSimpleInterest() {
+        const P = parseFloat(document.getElementById('principal').value);
+        const R = parseFloat(document.getElementById('rate').value);
+        const T = parseFloat(document.getElementById('time').value);
+      
+        const interest = (P * R * T) / 100;
+        const total = P + interest;
+      
+        document.getElementById('simpleResult').innerHTML = `
+          Interest: $${interest.toFixed(2)}<br>
+          Total Amount: $${total.toFixed(2)}
+        `;
+      }
+      
+  </script>
+</body>
+</html>
